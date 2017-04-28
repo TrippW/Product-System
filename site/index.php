@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -16,7 +15,6 @@
   </head>
 
   <body>
-
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -31,14 +29,13 @@
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="cart.php"><span class="glyphicon glyphicon-shopping-cart"></span></a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
 
-    <section id="products">
+    <section id="products" style="padding-top: 30px;">
       <?php
         // Create connection to parts database
         require('partsdb.php');
@@ -51,23 +48,34 @@
           die("Database query failed.");
         }
 
+        $i = 0;  // Counter
+
         echo '<div class="container">';
-          echo '<div class="row">';
-            // Display parts
+            // Display parts, 4 per row
             while ($row = $stmt->fetch()) {
-              echo '<form action="#" method="POST">';
+              if ($i%4 == 0) {
+                echo '<div class="row">';
+              }
+
                 echo '<div class="col-md-3">';
                 echo '<div class="thumbnail">';
-                  echo '<img src="'.$row["pictureURL"].'">';
+                  // Display image and make it clickable
+                  echo '<a class="center-block" href=productDetails.php?num='.$row["number"].' class="btn btn-default">';
+                  echo '<img style="width:120px;height:90px;" src="'.$row["pictureURL"].'">';
+                  // Display part caption and price
                   echo '<div class="caption">';
-                    echo '<p>'.$row["description"];
-                    echo '<br>Price: $'.$row["price"].'</p>';
+                    echo '<p>Price: $'.$row["price"].'</p>';
+                    echo '<p>'.$row["description"].'<p>';
                   echo '</div>';
+                  echo '</a>';
                 echo '</div>';
                 echo '</div>';
-              echo '</form>';
+
+              $i++;
+              if ($i%4 == 0) {
+                echo '</div>';
+              }
             }
-          echo '</div>';
         echo '</div>';
       ?>
     </section>

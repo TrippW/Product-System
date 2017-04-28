@@ -1,6 +1,11 @@
 body {
   padding-top: 50px;
 }
+
 .em-text{
-	color:#2aaf8c !important;
+  color:#2aaf8c !important;
+}
+
+.thumbnail {
+  border: none;
 }
