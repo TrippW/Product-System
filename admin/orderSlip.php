@@ -5,13 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Product System</title>
+    <title>Starter Template for Bootstrap</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
   </head>
 
   <body>
@@ -25,44 +25,30 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand em-text" href="#">Administrator</a>
+          <a class="navbar-brand" href="#">Project name</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Orders</a></li>
-            <li><a href="shippingCosts.php">Shipping Costs</a></li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Search by: <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="#">Date Range</a></li>
-              <li><a href="searchPrice.php">Price Range</a></li>
-              <li><a href="searchStatus.php">Status</a></li>
-            </ul>
-          </li>
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
           </ul>
-          <form action="#" class="navbar-form pull-right" method="POST">
-            <div class="form-group">
-              <input type="text" class="form-control" name="valueLow" placeholder="Start Date">
-              <input type="text" class="form-control" name="valueHigh" placeholder="End Date">
-            </div>
-            <button type="submit" class="btn btn-default" name="search" value=Filter>Submit</button>
-          </form>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
 
 
-<!--Viewing Orders-->
+<!--view and edit weight brackets-->
+<section id="Orders">
+<br><br><br><br>
 
-<section id="AllOrders">
  <?php
+  require('../db.php');
 
-  require('weightdb.php');
-  echo '<br><br><br><br>';
+  $id = $_GET['id'];//@mysql_escape_string($_GET['id']);
 
-
-  $sql = "SELECT a.OrderID, a.Date, sum(b.CostPerItem*b.Quantity) AS Cost, a.Status FROM OrderSlip a INNER JOIN OrderItem b ON a.OrderID = b.OrderID ".
-         "GROUP BY a.OrderID;";
+  $sql = "SELECT a.*, b.* FROM OrderSlip a INNER JOIN OrderItem b ON a.OrderID = b.OrderID ".
+         "WHERE a.OrderID='$id';";
   $stmt = $weightdb->query($sql);
 
   if (!$stmt)
@@ -72,9 +58,29 @@
   echo '<div class="container">';
   //printf("%10s &nbsp;&nbsp;&nbsp;&nbsp; %10s<br>",'Weight','Cost');
 
-  while($row = $stmt->fetch())
-   printf("<a href = orderSlip.php?id=%s>%10s &nbsp;&nbsp;&nbsp;&nbsp; $%.02f &nbsp;&nbsp;&nbsp;&nbsp; %8s</a><br>", $row['OrderID'], $row['Date'], $row['Cost'], $row['Status']);
+  $row = $stmt->fetch();
 
+  if($row['StreetAddress'] == '')
+  {
+   echo "User does not exist";
+  }
+  else
+  {
+//print customer information
+   printf("Name:%s<br>",$row['Name']);
+   printf("Address:%s<br>%s, %s %s<br>", $row['StreetAddress'], $row['City'], $row['State'], $row['Zip']);
+   printf("Date: %s <br>", $row[Date]);
+   printf("Status: %s <br><br>", $row['Status']);
+
+//print order information
+   echo '<table width = 100% align="center">';
+   printf("<tr><th>%s</th><th> %8s </th><th> %8s</th></tr>", 'Cost Per Item', 'Quantity', 'Product ID');
+   printf("<tr align='center'><td>$%.02f</td><td> %8s </td><td> %8s</td></tr>", $row['CostPerItem'], $row['Quantity'], $row['ProductID']);
+
+   while($row = $stmt->fetch())
+    printf("<tr align='center'><td>$%.02f</td><td> %8s </td><td> %8s</td></tr>", $row['CostPerItem'], $row['Quantity'], $row['ProductID']);
+   echo '</table>';
+  }
   echo '</div>';
  ?>
 </section>

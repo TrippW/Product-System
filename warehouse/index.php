@@ -38,9 +38,28 @@
       </div>
     </nav>
 
-	<section>
-	
-	</section>
+<section>
+ <br><br><br>
+ <?php
+//display the Unshipped orders by Date
+  require("../db.php");
+  $sql = "SELECT Date, Status FROM OrderSlip WHERE Status = 'Unshipped' ORDER BY Date Asc;";
+  $stmt = $weightdb->query($sql);
+
+  if (!$stmt)
+   die("Database query failed.");
+
+  $i = 0;  // Counter
+  echo '<div class="container">';
+  printf("%10s &nbsp;&nbsp;&nbsp;&nbsp; %10s<br>",'Date Ordered','Status');
+
+  while($row = $stmt->fetch())
+   printf("%10s &nbsp;&nbsp;&nbsp;&nbsp; %10s<br>", $row['Date'],$row['Status']);
+
+
+
+ ?>
+</section>
 
 
     <!-- Bootstrap core JavaScript
