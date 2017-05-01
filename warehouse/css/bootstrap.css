@@ -4149,9 +4149,6 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   .nav-tabs-justified > .active > a,
   .nav-tabs-justified > .active > a:hover,
   .nav-tabs-justified > .active > a:focus {
-<<<<<<< HEAD
-    border
-=======
     border-bottom-color: #fff;
   }
 }
@@ -6758,4 +6755,3 @@ button.close {
   }
 }
 /*# sourceMappingURL=bootstrap.css.map */
->>>>>>> a325d0ea091622c1d7c3290bf7c139925d793a07
