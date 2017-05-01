@@ -112,7 +112,7 @@
   echo '<br><br><br><br>';
 
 
-  $sql = "SELECT a.Date, sum(b.CostPerItem*b.Quantity) AS Cost, a.Status FROM OrderSlip a INNER JOIN OrderItem b ON a.OrderID = b.OrderID ".
+  $sql = "SELECT a.OrderID, a.Date, sum(b.CostPerItem*b.Quantity) AS Cost, a.Status FROM OrderSlip a INNER JOIN OrderItem b ON a.OrderID = b.OrderID ".
          "GROUP BY a.OrderID;";
   $stmt = $weightdb->query($sql);
 
@@ -121,10 +121,10 @@
 
   $i = 0;  // Counter
   echo '<div class="container">';
-  printf("%10s &nbsp;&nbsp;&nbsp;&nbsp; %10s<br>",'Weight','Cost');
+  //printf("%10s &nbsp;&nbsp;&nbsp;&nbsp; %10s<br>",'Weight','Cost');
 
   while($row = $stmt->fetch())
-   printf("%10s &nbsp;&nbsp;&nbsp;&nbsp; $%.02f &nbsp;&nbsp;&nbsp;&nbsp; %8s<br>", $row['Date'], $row['Cost'], $row['Status']);
+   printf("<a href = orderSlip.php?id=%s>%10s &nbsp;&nbsp;&nbsp;&nbsp; $%.02f &nbsp;&nbsp;&nbsp;&nbsp; %8s</a><br>", $row['OrderID'], $row['Date'], $row['Cost'], $row['Status']);
 
   echo '</div>';
  ?>
