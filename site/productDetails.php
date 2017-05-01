@@ -77,45 +77,37 @@
 
         <hr>
 
+        <form action="#" method="POST">
         <div class="row">
           <div class="col-md-4">
           </div>
-          <div class="form-group">
-            <div class="col-md-2">
-              <h4>Quantity:</h4>
-            </div>
-            <div class="col-md-2">
-              <select class="form-control">
-                <?php
-                  for ($i = 1; $i <= 20; $i++) {
-                    echo '<option>'.$i.'</option>';
-                  }
-                ?>
-              </select>
-            </div>
+          <div class="col-md-2">
+            <h4>Quantity:</h4>
+          </div>
+          <div class="col-md-2">
+            <input type="text" class="form-contol" id="quantity" name="quantity" required>
           </div>
           <div class="col-md-4">
           </div>
         </div>
 
-        <div class="row">
+        <div class="row" style="padding-top: 10px">
           <div class="col-md-4">
           </div>
-          <div class="form-group">
-            <div class="col-md-2">
-            </div>
-            <div class="col-md-2 text-right">
-              <form action="#" method="POST">
-                <input type="submit" class="btn btn-primary" name="add" value="Add to cart">
-              </form>
-            </div>
+          <div class="col-md-4 text-right">
+            <input type="submit" class="btn btn-primary" name="add" value="Add to cart">
+          </div>
           </div>
           <div class="col-md-4">
           </div>
         </div>
+        </form>
 
         <?php
           if (isset($_POST['add'])) {
+            $require('orderdb.php');
+
+
             // insert product into cart
             echo 'Success';
           }
