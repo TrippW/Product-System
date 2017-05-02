@@ -86,7 +86,28 @@
    echo '</table>';
   }
   echo '</center>';
- ?> 
+  
+  if(isset($_POST['emailButton'])) {
+    $stmt = $db->query($sql);
+    echo 'got it';
+    while($row = $stmt->fetch()) {
+      $sql2 = "SELECT Quantity FROM Inventory WHERE PartNum=".$row['ProductID'];
+      $stmt2 = $db->query($sql);
+      $select = $stmt2->fetch();
+      
+      echo $select['Quantity'].'<br>';
+      echo $row['Quantity'].'<br>';
+      $quantity = $select['Quantity'] - $row['Quantity'];
+      echo $quantity.'<br>';
+      
+      $sql3 = "UPDATE Inventory SET Quantity='$quantity' WHERE PartNum=".$row['ProductID'];
+      $db->query($sql3);
+    }
+    
+    $sql4 = "UPDATE OrderSlip SET Status='Shipped' WHERE OrderID='$id'";
+    $db->query($sql4);
+  }
+?> 
 <div> 
 <div style="height: 30px;"></div>
 </div> 
@@ -100,7 +121,7 @@
 </div>
 <div class="col-sm-6">
 <div> 
-<center><input type="button" id="emailButton" value="Email Status" class="btn btn-block btn-primary" href="mailto: PULL CUST NAME"></center>      
+<center><form action="#" method="POST"><input type="submit" name="emailButton" value="Email Status" class="btn btn-block btn-primary" href="mailto: PULL CUST NAME"></form></center>     
 </div> 
 </div>
 </div> 
