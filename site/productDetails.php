@@ -1,3 +1,13 @@
+<?php
+$cookie_name = "ProductSystemCart";
+
+if(!isset($_COOKIE[$cookie_name])) {
+ $cookie_value = time();
+ setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/~z1736289/467/","students.cs.niu.edu",0);
+ echo "SET COOKIE";
+// setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/","students.cs.niu.edu",0);
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -166,12 +176,12 @@
                 echo '</div>';     
               }
               else if ($rowQ >= $quantity) {
-                $insertSQL = "INSERT into Cart (ProductID, Quantity) values ('$partNum', '$quantity')";
-                $sql = sprintf("INSERT INTO Cart (ProductID, Quantity) VALUES ('%s','%s')",
+                $sql = sprintf("INSERT INTO Cart (ProductID, Quantity, CartID) VALUES ('%s','%s','%s')",
                   @mysql_escape_string($partNum),
-                  @mysql_escape_string($_POST['quantity']));
-	              $stmt = $db->query($sql);
-                
+                  @mysql_escape_string($_POST['quantity']),
+                  $_COOKIE[$cookie_name]);
+                $stmt = $db->query($sql);
+
                 echo '<div class="row text-center">';
                   echo '<h4>Successfully added to cart.</h4>';
                 echo '</div>';   

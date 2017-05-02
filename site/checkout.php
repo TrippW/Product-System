@@ -187,7 +187,7 @@ echo '<h2> TOTAL:<input value="',printf($total),'" name="totalvalue" readonly> <
         $stmt4 = $db->query($sql);
       }
 
-      $stmt5 = "DELETE FROM Cart";
+      $stmt5 = "DELETE FROM Cart Where CartID = '".$_COOKIE['$cookie_name']."'";
       mysqli_query($db, $stmt5);
 
     }

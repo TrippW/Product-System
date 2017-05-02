@@ -1,3 +1,13 @@
+<?php
+$cookie_name = "ProductSystemCart";
+if(!isset($_COOKIE[$cookie_name])) {
+ $cookie_value = time();
+ setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/~z1736289/467/","students.cs.niu.edu",0);
+ echo "SET COOKIE";
+// setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/","students.cs.niu.edu",0);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

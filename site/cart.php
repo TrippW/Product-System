@@ -1,3 +1,12 @@
+<?php
+$cookie_name = "ProductSystemCart";
+if(!isset($_COOKIE[$cookie_name])) {
+ $cookie_value = time();
+ setcookie($cookie_name, $cookie_value, time() + (86400 * 30), "/~z1736289/467/","students.cs.niu.edu",0);
+ echo "SET COOKIE";
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,7 +65,7 @@ Cart
   require('../partsdb.php');
   require('../db.php');
 
-  $sql = "SELECT * FROM Cart";
+  $sql = "SELECT * FROM Cart Where CartID = '".$_COOKIE[$cookie_name]."'";
   $stmt = $db->query($sql);
 
   if (!$stmt) {
