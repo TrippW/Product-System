@@ -55,6 +55,7 @@
 <h1>Order Information</h1>
 </center>
  <?php
+  require('../partsdb.php');
   require('../db.php');
 
   $id = $_GET['id'];//@mysql_escape_string($_GET['id']);
@@ -87,11 +88,21 @@
 
 //print order information
    echo '<table width = "50%" align="center" style="margin-bottom:50px; border: 2px solid black;">';
-   printf("<tr><th>%s</th><th> %8s </th><th> %8s</th></tr>", 'Cost Per Item', 'Quantity', 'Product ID');
-   printf("<tr><td>$%.02f</td><td> %8s </td><td> %8s</td></tr>", $row['CostPerItem'], $row['Quantity'], $row['ProductID']);
+   printf("<tr><th>%s</th><th> %8s </th><th> %8s</th><th>%16s</th></tr>", 'Cost Per Item', 'Quantity', 'Product ID','Description');
+
+    $sql2 = "SELECT * FROM parts WHERE number ='".$row['ProductID']."';";
+    $stmt2 = $partsdb->query($sql2);
+    $product = $stmt2->fetch();
+
+   printf("<tr><td>$%.02f</td><td> %8s </td><td> %8s</td><td> %16s</td></tr>", $row['CostPerItem'], $row['Quantity'], $row['ProductID'], $product['description']);
 
    while($row = $stmt->fetch())
-    printf("<tr><td>$%.02f</td><td> %8s </td><td> %8s</td></tr>", $row['CostPerItem'], $row['Quantity'], $row['ProductID']);
+   {
+    $sql2 = "SELECT * FROM parts WHERE number ='".$row['ProductID']."';";
+    $stmt2 = $partsdb->query($sql2);
+    $product = $stmt2->fetch();
+    printf("<tr><td>$%.02f</td><td> %8s </td><td> %8s</td><td> %16s</td></tr>", $row['CostPerItem'], $row['Quantity'], $row['ProductID'], $product['description']);
+   }
    echo '</table>';
   }
   echo '</center>';

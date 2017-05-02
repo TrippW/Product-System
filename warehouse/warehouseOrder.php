@@ -50,6 +50,7 @@
 <div class='row'> 
 <div class="col-sm-12">
  <?php
+  require('../partsdb.php');
   require('../db.php');
 
   $id = $_GET['id'];//@mysql_escape_string($_GET['id']);
@@ -57,6 +58,7 @@
   $sql = "SELECT a.*, b.* FROM OrderSlip a INNER JOIN OrderItem b ON a.OrderID = b.OrderID ".
          "WHERE a.OrderID='$id';";
   $stmt = $db->query($sql);
+
 
   if (!$stmt)
    die("Database query failed.");
@@ -78,17 +80,26 @@
 
 //print order information
    echo '<table width = "50%" align="center" style="margin-bottom:50px; border: 2px solid black;">';
-   printf("<tr><th>%s</th><th> %8s </th><th> %8s</th></tr>", 'Cost Per Item', 'Quantity', 'Product ID');
-   printf("<tr><td>$%.02f</td><td> %8s </td><td> %8s</td></tr>", $row['CostPerItem'], $row['Quantity'], $row['ProductID']);
+   printf("<tr><th>%s</th><th> %8s </th><th> %8s</th><th> %16s</th></tr>", 'Cost Per Item', 'Quantity', 'Product ID', Description);
+
+    $sql2 = "SELECT * FROM parts WHERE number ='".$row['ProductID']."';";
+    $stmt2 = $partsdb->query($sql2);
+    $product = $stmt2->fetch();
+
+   printf("<tr><td>$%.02f</td><td> %8s </td><td> %8s</td><td> %16s</td></tr>", $row['CostPerItem'], $row['Quantity'], $row['ProductID'], $product['description']);
 
    while($row = $stmt->fetch())
-    printf("<tr><td>$%.02f</td><td> %8s </td><td> %8s</td></tr>", $row['CostPerItem'], $row['Quantity'], $row['ProductID']);
+   {
+    $sql2 = "SELECT * FROM parts WHERE number ='".$row['ProductID']."';";
+    $stmt2 = $partsdb->query($sql2);
+    $product = $stmt2->fetch();
+    printf("<tr><td>$%.02f</td><td> %8s </td><td> %8s</td><td> %16s</td></tr>", $row['CostPerItem'], $row['Quantity'], $row['ProductID'], $product['description']);
+   }
    echo '</table>';
   }
   echo '</center>';
   
   if(isset($_POST['emailButton'])) {
-    $stmt = $db->query($sql);
     while($row = $stmt->fetch()) {
       $sql2 = "SELECT Quantity FROM Inventory WHERE PartNum=".$row['ProductID'];
       $stmt2 = $db->query($sql);
