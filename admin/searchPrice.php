@@ -71,7 +71,7 @@ $(document).ready(function($) {
 
   require('../db.php');
   
-  $sql = "SELECT a.OrderID, a.Date, sum(b.CostPerItem*b.Quantity) AS Cost, a.Status FROM OrderSlip a INNER JOIN OrderItem b ON a.OrderID = b.OrderID GROUP BY a.OrderID";
+  $sql = "SELECT a.OrderID, a.Date, sum(b.CostPerItem*b.Quantity)+a.ShippingPrice AS Cost, a.Status FROM OrderSlip a INNER JOIN OrderItem b ON a.OrderID = b.OrderID GROUP BY a.OrderID";
   if(isset($_POST['search']))
 	$sql = $sql." HAVING (Cost > ".$_POST['valueLow']." AND Cost < ".$_POST['valueHigh'].")";
   $sql = $sql.";";
