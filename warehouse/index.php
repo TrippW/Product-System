@@ -5,13 +5,20 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="keywords" content="">
 <meta name="description" content="">
-<title>cosmo-warehouse</title>
+<title>Warehouse</title>
 <!-- Style CSS -->
 <link href="../media/assets/bootstrap-3.3.6/css/bootstrap.min.css" media="screen" rel="stylesheet">
 <link href="../media/assets/font-awesome/css/font-awesome.min.css" media="screen" rel="stylesheet">
 <link href="../media/media/css/custom.css" rel="stylesheet">
 <script src="../media/js/jquery-1.12.1.min.js"></script>
 <script src="../media/assets/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function($) {
+    $(".table-row").click(function() {
+        window.document.location = $(this).data("href");
+    });
+});
+</script>
 </head>
 <body >
     <div class="wrapper" >
@@ -22,7 +29,7 @@
         <span class="navbar-brand">
             <img style="width: 40px; height: 40px; margin-top: -5px; margin-right: 3px; float: left; display:none;" src="">
             Warehouse 
-            <span class="hidden-sm text-muted" style="font-size:13px;">Orders</span>
+            <span class="hidden-sm text-muted" style="font-size:13px;"></span>
         </span>
       <button data-target="#navbar-main" data-toggle="collapse" type="button" class="navbar-toggle">
         <span class="icon-bar"></span>
@@ -31,38 +38,43 @@
       </button>
     </div>
     <div id="navbar-main" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav"></ul>
+      <ul class="nav navbar-nav">
+        <li><a class="bg-hover-color" href="index.php">Orders</a></li>
+      </ul>
     </div>
   </div>
 </div>
 <input type='hidden' id='bhb-navbar-scrollspy' value ='1'>
 </div> 
 <div > 
-<div class='container'> 
-<div class='row'> 
-<div class="col-sm-2">
-</div>
-<div class="col-sm-8">
-
 <section>
- <br><br><br>
+<div class='container'>
+<div class='row'>
+<div class='col-md-2'></div>
+<div class='col-md-8'>
  <?php
 //display the Unshipped orders by Date
   require("../db.php");
-  $sql = "SELECT Date, Status FROM OrderSlip WHERE Status = 'Unshipped' ORDER BY Date Asc;";
+  $sql = "SELECT OrderID, Date, Status FROM OrderSlip WHERE Status = 'Unshipped' ORDER BY Date Asc;";
   $stmt = $db->query($sql);
 
   if (!$stmt)
    die("Database query failed.");
 
-  $i = 0;  // Counter
-  echo '<div class="container">';
-  printf("%10s &nbsp;&nbsp;&nbsp;&nbsp; %10s<br>",'Date Ordered','Status');
-
+  echo '<table class="table table-hover">';
+  echo '<thead><tr><th><h3>Date</h3></th><th><h3>Status</h3></th></tr></thead>';
+  echo '<tbody>';
   while($row = $stmt->fetch())
-   printf("%10s &nbsp;&nbsp;&nbsp;&nbsp; %10s<br>", $row['Date'],$row['Status']);
-
+  {
+     echo '<tr class="table-row" data-href="warehouseOrder.php?id=',$row['OrderID'],'"><td>',$row['Date'],'</td><td>',$row['Status'],'</td></tr>';
+  }
+  echo '</tbody>';
+  echo '</table>';
  ?>
+</div>
+<div class='col-md-2'></div>
+</div>
+</div>
 </section>
 </div>
 <div class="col-sm-2">

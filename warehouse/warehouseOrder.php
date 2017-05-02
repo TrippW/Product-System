@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="keywords" content="">
 <meta name="description" content="">
-<title>cosmo-warehouseOrder</title>
+<title>View Order</title>
 <!-- Style CSS -->
 <link href="../media/assets/bootstrap-3.3.6/css/bootstrap.min.css" media="screen" rel="stylesheet">
 <link href="../media/assets/font-awesome/css/font-awesome.min.css" media="screen" rel="stylesheet">
@@ -22,7 +22,7 @@
         <span class="navbar-brand">
             <img style="width: 40px; height: 40px; margin-top: -5px; margin-right: 3px; float: left; display:none;" src="">
             Warehouse 
-            <span class="hidden-sm text-muted" style="font-size:13px;">Orders</span>
+            <span class="hidden-sm text-muted" style="font-size:13px;"></span>
         </span>
       <button data-target="#navbar-main" data-toggle="collapse" type="button" class="navbar-toggle">
         <span class="icon-bar"></span>
@@ -31,7 +31,9 @@
       </button>
     </div>
     <div id="navbar-main" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav"></ul>
+      <ul class="nav navbar-nav">
+        <li><a class="bg-hover-color" href="index.php">Orders</a></li>      
+      </ul>
     </div>
   </div>
 </div>
@@ -47,18 +49,44 @@
 <div class='container-fluid'> 
 <div class='row'> 
 <div class="col-sm-12">
-<p style="text-align:center;"> 
-PHP FOR ALL ITEMS IN ORDER
-</p> 
-<h1 style="text-align:center;"> 
-Name:
-</h1> 
-<h2 style="text-align:center;"> 
-Address: 
-</h2> 
-<h2 style="text-align:center;"> 
-Email:
-</h2> 
+ <?php
+  require('../db.php');
+
+  $id = $_GET['id'];//@mysql_escape_string($_GET['id']);
+
+  $sql = "SELECT a.*, b.* FROM OrderSlip a INNER JOIN OrderItem b ON a.OrderID = b.OrderID ".
+         "WHERE a.OrderID='$id';";
+  $stmt = $db->query($sql);
+
+  if (!$stmt)
+   die("Database query failed.");
+
+  $row = $stmt->fetch();
+
+  if($row['StreetAddress'] == '')
+  {
+   echo "User does not exist";
+  }
+  else
+  {
+//print customer information
+  echo'<center>';
+   printf("Name: %s<br>",$row['Name']);
+   printf("Address: %s<br>%s, %s %s<br>", $row['StreetAddress'], $row['City'], $row['State'], $row['Zip']);
+   printf("Date: %s <br>", $row[Date]);
+   printf("Status: %s <br><br>", $row['Status']);
+
+//print order information
+   echo '<table width = "50%" align="center" style="margin-bottom:50px; border: 2px solid black;">';
+   printf("<tr><th>%s</th><th> %8s </th><th> %8s</th></tr>", 'Cost Per Item', 'Quantity', 'Product ID');
+   printf("<tr><td>$%.02f</td><td> %8s </td><td> %8s</td></tr>", $row['CostPerItem'], $row['Quantity'], $row['ProductID']);
+
+   while($row = $stmt->fetch())
+    printf("<tr><td>$%.02f</td><td> %8s </td><td> %8s</td></tr>", $row['CostPerItem'], $row['Quantity'], $row['ProductID']);
+   echo '</table>';
+  }
+  echo '</center>';
+ ?> 
 <div> 
 <div style="height: 30px;"></div>
 </div> 

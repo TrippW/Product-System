@@ -17,7 +17,6 @@
   if(mysqli_connect_errno()) {
     die("Database connection failed: " . mysqli_connect_error() . " (" . mysqli_connect_errno() . ")");
   }
-  
   $total = $_POST['totalval'];
 ?>
 <html lang="en">
@@ -119,8 +118,9 @@ Shipping Information
 <h3 style="text-align:left;"> 
 Please enter all information as accurately as possible. 
 </h3>
-<h2> TOTAL: $<?php echo $total; ?> </h2>
-</div>
+<?php
+echo '<h2> TOTAL:<input value="',printf($total),'" name="totalvalue" readonly> </h2>';
+?>
 </div> 
 </div> 
 </div>
@@ -143,14 +143,13 @@ Please enter all information as accurately as possible.
 </div>
 </form>
 <?php
-   $total = number_format($total, 2, '.', '');
+   $total = $_POST['totalvalue'];
+
 	if(isset($_POST['submitOrder']))
 	{
 	  $name = $_POST['name'];
 	  $cc = $_POST['creditcard'];
 	  $expire = $_POST['expiration'];
-
-    echo $total;
     
 	  $url = 'http://blitz.cs.niu.edu/CreditCard/';
     $data = array('vendor' => 'VE001-99', 'trans' => mt_rand(1000000,9999999), 'cc' => $cc, 'name' => $name, 'exp' => $expire, 'amount' => $total);
@@ -158,11 +157,10 @@ Please enter all information as accurately as possible.
     $context  = stream_context_create($options);
     $result = file_get_contents($url, false, $context);
     
-    echo $result;
     $result = strpos($result, "authorization");
    
     if ($result) {
-      echo '<h1 class="text-center" style="font-weight: bold;">Order Received Successfully ',printf($total),'</h1>';
+      echo '<h1 class="text-center" style="font-weight: bold;">Order Received Successfully</h1>';
        
       $date = date("Y-m-d");
       $stmt = "INSERT INTO OrderSlip (Name, Email, StreetAddress, City, State, Zip, Status, Date) VALUES ('".$_POST['name']."','".$_POST['email']."','".$_POST['shippingaddress']."','".$_POST['city']."','".$_POST['state']."','".$_POST['zip']."', 'Unshipped', '$date'))";
@@ -178,7 +176,8 @@ Please enter all information as accurately as possible.
         // Loop through shopping cart and add products to orders table
         $partNum = $item['ProductID'];
         $stmt3 = "SELECT * FROM parts WHERE number='$partNum'";
-        $part = mysqli_query($partsdb, $stmt3);
+        $parts = mysqli_query($partsdb, $stmt3);
+        $part = mysqli_fetch_assoc($parts);
         
         $stmt4 = "INSERT INTO OrderItem (OrderID, ProductID, Quantity, CostPerItem) VALUES ('".$orderID."', '".$item[ProductID]."', '".$item[Quantity]."', '".$part[price]."')";
         mysqli_query($db, $stmt4);

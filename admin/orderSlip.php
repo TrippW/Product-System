@@ -80,8 +80,8 @@
   {
 //print customer information
   echo'<center>';
-   printf("Name:%s<br>",$row['Name']);
-   printf("Address:%s<br>%s, %s %s<br>", $row['StreetAddress'], $row['City'], $row['State'], $row['Zip']);
+   printf("Name: %s<br>",$row['Name']);
+   printf("Address: %s<br>%s, %s %s<br>", $row['StreetAddress'], $row['City'], $row['State'], $row['Zip']);
    printf("Date: %s <br>", $row[Date]);
    printf("Status: %s <br><br>", $row['Status']);
 

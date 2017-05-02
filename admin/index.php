@@ -5,13 +5,20 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="keywords" content="">
 <meta name="description" content="">
-<title>cosmo-shipping-cost</title>
+<title>Administrator</title>
 <!-- Style CSS -->
 <link href="../media/assets/bootstrap-3.3.6/css/bootstrap.min.css" media="screen" rel="stylesheet">
 <link href="../media/assets/font-awesome/css/font-awesome.min.css" media="screen" rel="stylesheet">
 <link href="../media/media/css/custom.css" rel="stylesheet">
 <script src="../media/js/jquery-1.12.1.min.js"></script>
 <script src="../media/assets/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function($) {
+    $(".table-row").click(function() {
+        window.document.location = $(this).data("href");
+    });
+});
+</script>
 </head>
 <body >
     <div class="wrapper" >
@@ -55,63 +62,46 @@
 <input type='hidden' id='bhb-navbar-scrollspy' value ='1'>
 </div> 
 
-<div class="container">
-<center>
-  <div class="row">
-   <div class="col-md-4">
-      <h2>DATE</h2>
-   </div>
-   <div class="col-md-4">
-      <h2>TOTAL</h2>
-   </div>
-   <div class="col-md-4">
-      <h2>STATUS</h2>
-   </div>
-</div>
-</center>
-
-</div>
-
 <section>
+<div class='container'>
+<div class='row'>
+<div class='col-md-1'></div>
+<div class='col-md-10'>
  <?php
 
   require('../db.php');
-
-
-  $sql = "SELECT a.OrderID, a.Date, sum(b.CostPerItem*b.Quantity) AS Cost, a.Status FROM OrderSlip a INNER JOIN OrderItem b ON a.OrderID = b.OrderID ".
+  
+  // Select information from database
+  if (isset($_POST['search'])) {
+    $low = $_POST['valueLow'];
+    $high = $_POST['valueHigh'];
+    $sql = "SELECT a.OrderID, a.Date, sum(b.CostPerItem*b.Quantity) AS Cost, a.Status FROM OrderSlip a INNER JOIN OrderItem b ON a.OrderID = b.OrderID ".
+         "WHERE a.Date BETWEEN '%$low%' AND '%$high%' GROUP BY a.OrderID;";
+    $stmt = $db->query($sql);
+  }
+  else {
+    $sql = "SELECT a.OrderID, a.Date, sum(b.CostPerItem*b.Quantity) AS Cost, a.Status FROM OrderSlip a INNER JOIN OrderItem b ON a.OrderID = b.OrderID ".
          "GROUP BY a.OrderID;";
-  $stmt = $db->query($sql);
-
+    $stmt = $db->query($sql);
+  }
+  
   if (!$stmt)
    die("Database query failed.");
 
- // $i = 0;  // Counter
-  echo '<div class="container">';
-  //printf("%10s &nbsp;&nbsp;&nbsp;&nbsp; %10s<br>",'Weight','Cost');
-
+  echo '<table class="table table-hover">';
+  echo '<thead><tr><th><h3>Date</h3></th><th><h3>Total</h3></th><th><h3>Status</h3></th></tr></thead>';
+  echo '<tbody>';
   while($row = $stmt->fetch())
-  { 
-        echo '<center>
-          <div class="container-fluid">
-          <div class="row">
-            <div class="col-md-4">
-              <h4><a href = "orderSlip.php?id=',$row['OrderID'],'">',printf("%s",$row['Date']),'</a> </h4>
-            </div>
-            <div class="col-md-4">
-              <h4><a href = "orderSlip.php?id=',$row['OrderID'],'">',printf("$%.02f",$row['Cost']),'</a> </h4>
-            </div>
-            <div class="col-md-4">
-              <h4><a href = "orderSlip.php?id=',$row['OrderID'],'">',$row['Status'],'</a> </h4>
-            </div>
-          </div>
-         </div><!--close site container-->
-         </center>';
-
-   //printf("<a href = orderSlip.php?id=%s>%10s &nbsp;&nbsp;&nbsp;&nbsp; $%.02f &nbsp;&nbsp;&nbsp;&nbsp; %8s</a><br>", $row['OrderID'], $row['Date'], $row['Cost'], $row['Status']);
+  {
+     echo '<tr class="table-row" data-href="orderSlip.php?id=',$row['OrderID'],'"><td>',$row['Date'],'</td><td>',printf("$%.1f",$row['Cost']),'</td><td>',$row['Status'],'</td></tr>';
   }
-
-  echo '</div>';
+  echo '</tbody>';
+  echo '</table>';
  ?>
+</div>
+<div class='col-md-1'></div>
+</div>
+</div>
 </section>
 
 

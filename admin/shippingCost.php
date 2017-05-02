@@ -54,24 +54,30 @@
 <h1 style="text-align:left;"> 
 Shipping Costs
 </h1> 
+<div class='row'>
+<div class='col-md-3'></div>
+<div class='col-md-6'>
 <?php
   require('../db.php');
-  echo '<br><br><br><br>';
   $sql = "select Weight, Cost from ShippingCost Order By Weight;";
   $stmt = $db->query($sql);
 
   if (!$stmt)
     die("Database query failed.");
 
-  $i = 0;  // Counter
-  echo '<div class="container">';
-  printf("%10s &nbsp;&nbsp;&nbsp;&nbsp; %10s<br>",'Weight','Cost');
+  echo '<table class="table">';
+  echo '<thead><tr><th>Weight</th><th>Cost</th></tr></thead>';
 
-  while($row = $stmt->fetch())
-    printf("%.02f &nbsp;&nbsp;&nbsp;&nbsp; $%.02f<br>", $row['Weight'], $row['Cost']);
-
-  echo '</div>';
+  echo '<tbody>';
+  while($row = $stmt->fetch()) {
+    echo '<tr><td>'.$row['Weight'].'</td><td>'.$row['Cost'].'</td></tr>';
+  }
+  echo '</tbody>';
+  echo '</table>';
  ?> 
+</div>
+<div class='col-md-3'></div>
+</div>
 <form action="#" method="post" onsubmit="window.location.reload();"> 
 <h4 style="text-align:center;"> 
 Always include cost when adding a weight bracket.

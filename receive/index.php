@@ -33,7 +33,7 @@
     </div>
     <div id="navbar-main" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"><li><a class="bg-hover-color" href="#">Inventory Search </a></li></ul>
-      <form action="index.php" class="navbar-form" method="POST">
+      <form action="index.php" class="navbar-form pull-right" method="POST">
         <div class="form-group">
           <input type="text" class="form-control" name="value" placeholder="Part Num or Description">
         </div>
