@@ -166,12 +166,18 @@
                 echo '</div>';     
               }
               else if ($rowQ >= $quantity) {
-                $insert = $db->prepare("INSERT into Cart (ProductID, Quantity) values (:partNum, :quantity)");
-                $insert->bindParam(":partNum", $partNum);
-                $insert->bindParam(":quantity", $_POST['quantity']);
+                $insertSQL = "INSERT into Cart (ProductID, Quantity) values ('$partNum', '$quantity')";
+               $sql = sprintf("INSERT INTO Cart (ProductID, Quantity) VALUES ('%s','%s')",
+             @mysql_escape_string($partNum),
+             @mysql_escape_string($_POST['quantity']));
+echo $sql;
+	    $stmt = $db->query($sql);
 
-                $insert->execute();
-                $insert->closeCursor();
+        //        $insert->bindParam(":partNum", $partNum);
+          //      $insert->bindParam(":quantity", $_POST['quantity']);
+
+  //              $insert->execute();
+//                $insert->closeCursor();
                 
                 echo '<div class="row text-center">';
                   echo '<h4>Successfully added to cart.</h4>';
