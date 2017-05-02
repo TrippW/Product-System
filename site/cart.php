@@ -111,6 +111,7 @@ Cart
     
   $total = $total + $shipping;
   echo '<input type="hidden" name="totalval" value='.$total.'>'; //sending total to checkout.php
+  echo '<input type="hidden" name="shippingval" value='.$shipping.'>'; //sending shipping to checkout.php
 ?>
 </div>
 </div

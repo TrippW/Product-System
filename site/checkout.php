@@ -18,6 +18,7 @@
     die("Database connection failed: " . mysqli_connect_error() . " (" . mysqli_connect_errno() . ")");
   }
   $total = $_POST['totalval'];
+  $shipping = $_POST['shippingval'];
 ?>
 <html lang="en">
 <head>
@@ -81,7 +82,7 @@ Shipping Information
 <div class="col-sm-8">
 <div class="form-group"><label>Name*</label><input  name="name" placeholder="Enter Name" class=" form-control" required> 
 </div>
-<div class="form-group"><label>Email Address*</label><input  name="email " placeholder="Enter Email" class=" form-control" required> 
+<div class="form-group"><label>Email Address*</label><input  name="email" placeholder="Enter Email" class=" form-control" required> 
 </div>
 <div class="form-group"><label>Address Line 1*</label><input  name="shippingaddress" placeholder="Shipping Address Line 1" class=" form-control" required> 
 </div>
@@ -119,6 +120,7 @@ Shipping Information
 Please enter all information as accurately as possible. 
 </h3>
 <?php
+echo '<input type="hidden" name="shippingval" value='.$shipping.'>'; //sending shipping to checkout.php
 echo '<h2> TOTAL:<input value="',printf($total),'" name="totalvalue" readonly> </h2>';
 ?>
 </div> 
@@ -163,8 +165,9 @@ echo '<h2> TOTAL:<input value="',printf($total),'" name="totalvalue" readonly> <
        
       if(mysqli_query($db, "SELECT Count(*) as count FROM Cart")->fetch_assoc()['count'] == 0)
        die("No Items Selected");
+      $shipping=$_POST['shippingval'];
 
-      $stmt = "INSERT INTO OrderSlip (Name, Email, StreetAddress, City, State, Zip, Status, Date) VALUES ('".$_POST['name']."','".$_POST['email']."','".$_POST['shippingaddress']."','".$_POST['city']."','".$_POST['state']."','".$_POST['zip']."', 'Unshipped', NOW())";
+      $stmt = "INSERT INTO OrderSlip (Name, Email, StreetAddress, City, State, Zip, Status, Date, ShippingPrice) VALUES ('".$_POST['name']."','".$_POST['email']."','".$_POST['shippingaddress']."','".$_POST['city']."','".$_POST['state']."','".$_POST['zip']."', 'Unshipped', NOW(), ".$shipping.")";
       if(!mysqli_query($db, $stmt)) die ("Did not place data");
 
       $stmt = mysqli_query($db,"SELECT * FROM OrderSlip ORDER BY OrderID DESC LIMIT 1");
