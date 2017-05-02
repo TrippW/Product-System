@@ -70,21 +70,13 @@ $(document).ready(function($) {
  <?php
 
   require('../db.php');
-  
-  // Select information from database
-  if (isset($_POST['search'])) {
-    $low = $_POST['valueLow'];
-    $high = $_POST['valueHigh'];
-    $sql = "SELECT a.OrderID, a.Date, sum(b.CostPerItem*b.Quantity) AS Cost, a.Status FROM OrderSlip a INNER JOIN OrderItem b ON a.OrderID = b.OrderID ".
-         "WHERE a.Date BETWEEN '%$low%' AND '%$high%' GROUP BY a.OrderID;";
-    $stmt = $db->query($sql);
-  }
-  else {
-    $sql = "SELECT a.OrderID, a.Date, sum(b.CostPerItem*b.Quantity) AS Cost, a.Status FROM OrderSlip a INNER JOIN OrderItem b ON a.OrderID = b.OrderID ".
-         "GROUP BY a.OrderID;";
-    $stmt = $db->query($sql);
-  }
-  
+
+  $sql = "SELECT a.OrderID, a.Date, sum(b.CostPerItem*b.Quantity) AS Cost, a.Status FROM OrderSlip a INNER JOIN OrderItem b ON a.OrderID = b.OrderID GROUP BY a.OrderID";
+  if(isset($_POST['search'])) 
+        $sql = $sql." HAVING a.Date>'".$_POST['valueLow']."' and a.Date < '".$_POST['valueHigh']."'";
+  $sql = $sql.";";
+  $stmt = $db->query($sql);
+
   if (!$stmt)
    die("Database query failed.");
 

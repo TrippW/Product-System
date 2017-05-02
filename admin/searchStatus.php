@@ -70,18 +70,12 @@ $(document).ready(function($) {
 <div class='col-md-10'>
  <?php
   require('../db.php');
-  
-  if (isset($_POST['search'])) {
-    $value = $_POST['status'];
-    $sql = "SELECT a.OrderID, a.Date, sum(b.CostPerItem*b.Quantity) AS Cost, a.Status FROM OrderSlip a INNER JOIN OrderItem b ON a.OrderID = b.OrderID ".
-         "WHERE a.Status='$value' GROUP BY a.OrderID;";
-    $stmt = $db->query($sql);
-  }
-  else {
-    $sql = "SELECT a.OrderID, a.Date, sum(b.CostPerItem*b.Quantity) AS Cost, a.Status FROM OrderSlip a INNER JOIN OrderItem b ON a.OrderID = b.OrderID ".
-         "GROUP BY a.OrderID;";
-    $stmt = $db->query($sql);
-  }
+
+  $sql = "SELECT a.OrderID, a.Date, sum(b.CostPerItem*b.Quantity) AS Cost, a.Status FROM OrderSlip a INNER JOIN OrderItem b ON a.OrderID = b.OrderID GROUP BY a.OrderID";
+  if(isset($_POST['search'])) 
+        $sql = $sql." HAVING a.Status='".$_POST['status']."'";
+  $sql = $sql.";";
+  $stmt = $db->query($sql);
 
   if (!$stmt)
    die("Database query failed.");
