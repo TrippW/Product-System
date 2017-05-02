@@ -143,15 +143,14 @@ echo '<h2> TOTAL:<input value="',printf($total),'" name="totalvalue" readonly> <
 </div>
 </form>
 <?php
-   $total = $_POST['totalvalue'];
+   $total = number_format($total, 2, '.', '');
+   if(isset($_POST['submitOrder']))
+   {
+    $name = $_POST['name'];
+    $cc = $_POST['creditcard'];
+    $expire = $_POST['expiration'];
 
-	if(isset($_POST['submitOrder']))
-	{
-	  $name = $_POST['name'];
-	  $cc = $_POST['creditcard'];
-	  $expire = $_POST['expiration'];
-    
-	  $url = 'http://blitz.cs.niu.edu/CreditCard/';
+    $url = 'http://blitz.cs.niu.edu/CreditCard/';
     $data = array('vendor' => 'VE001-99', 'trans' => mt_rand(1000000,9999999), 'cc' => $cc, 'name' => $name, 'exp' => $expire, 'amount' => $total);
     $options = array('http' => array('header'  => array ('Content-type: application/json', 'Accept: application/json'), 'method'  => 'POST', 'content' => json_encode($data)));
     $context  = stream_context_create($options);
@@ -162,25 +161,27 @@ echo '<h2> TOTAL:<input value="',printf($total),'" name="totalvalue" readonly> <
     if ($result) {
       echo '<h1 class="text-center" style="font-weight: bold;">Order Received Successfully</h1>';
        
-      $date = date("Y-m-d");
-      $stmt = "INSERT INTO OrderSlip (Name, Email, StreetAddress, City, State, Zip, Status, Date) VALUES ('".$_POST['name']."','".$_POST['email']."','".$_POST['shippingaddress']."','".$_POST['city']."','".$_POST['state']."','".$_POST['zip']."', 'Unshipped', '$date'))";
+      if(mysqli_query($db, "SELECT Count(*) as count FROM Cart")->fetch_assoc()['count'] == 0)
+       die("No Items Selected");
 
-      mysqli_query($db, $stmt);
+      $stmt = "INSERT INTO OrderSlip (Name, Email, StreetAddress, City, State, Zip, Status, Date) VALUES ('".$_POST['name']."','".$_POST['email']."','".$_POST['shippingaddress']."','".$_POST['city']."','".$_POST['state']."','".$_POST['zip']."', 'Unshipped', NOW())";
+      if(!mysqli_query($db, $stmt)) die ("Did not place data");
 
-      $orderID = mysqli_insert_id($db);
-      echo $orderID;
-      $stmt2 = "SELECT * FROM Cart";
-      $products = mysqli_query($db, $stmt2);
+      $stmt = mysqli_query($db,"SELECT * FROM OrderSlip ORDER BY OrderID DESC LIMIT 1");
+      if(!$stmt) die(" Query Failed");
+      $row = $stmt->fetch_assoc();
+      $orderID = $row['OrderID'];
+      $stmt2 = mysqli_query($db,"SELECT * FROM Cart");
 
-      while ($item = mysqli_fetch_assoc($products)) {
+      while ($item = $stmt2->fetch_assoc()) {
         // Loop through shopping cart and add products to orders table
         $partNum = $item['ProductID'];
         $stmt3 = "SELECT * FROM parts WHERE number='$partNum'";
-        $parts = mysqli_query($partsdb, $stmt3);
-        $part = mysqli_fetch_assoc($parts);
-        
-        $stmt4 = "INSERT INTO OrderItem (OrderID, ProductID, Quantity, CostPerItem) VALUES ('".$orderID."', '".$item[ProductID]."', '".$item[Quantity]."', '".$part[price]."')";
-        mysqli_query($db, $stmt4);
+        $part = mysqli_query($partsdb,$stmt3)->fetch_assoc();
+
+	      $sql = sprintf("INSERT INTO OrderItem (OrderID, ProductID, Quantity, CostPerItem) VALUES ('%s','%s','%s','%s')",
+             $orderID, $item[ProductID], $item[Quantity], $part[price]);
+        $stmt4 = $db->query($sql);
       }
 
       $stmt5 = "DELETE FROM Cart";
