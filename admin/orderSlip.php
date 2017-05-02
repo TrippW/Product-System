@@ -69,7 +69,6 @@
 
   $i = 0;  // Counter
   echo '<div class="container">';
-  //printf("%10s &nbsp;&nbsp;&nbsp;&nbsp; %10s<br>",'Weight','Cost');
 
   $row = $stmt->fetch();
 
@@ -103,6 +102,16 @@
     $product = $stmt2->fetch();
     printf("<tr><td>$%.02f</td><td> %8s </td><td> %8s</td><td> %16s</td></tr>", $row['CostPerItem'], $row['Quantity'], $row['ProductID'], $product['description']);
    }
+
+  $sql = "SELECT ShippingPrice FROM OrderSlip WHERE OrderID='".$id."';";
+  $stmt = $db->query($sql);
+
+  if (!$stmt)
+   die("Database query failed.");
+
+  $row = $stmt->fetch();
+
+   printf("<tr><td>%s</td><td> %8s </td><td> %8s</td><td> $%.02f </td></tr>", "Shipping Cost", "", "", $row['ShippingPrice']);
    echo '</table>';
   }
   echo '</center>';

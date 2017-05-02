@@ -95,6 +95,26 @@
     $product = $stmt2->fetch();
     printf("<tr><td>$%.02f</td><td> %8s </td><td> %8s</td><td> %16s</td></tr>", $row['CostPerItem'], $row['Quantity'], $row['ProductID'], $product['description']);
    }
+
+  $sql = "SELECT ShippingPrice FROM OrderSlip WHERE OrderID='".$id."';";
+  $stmt = $db->query($sql);
+
+  if (!$stmt)
+   die("Database query failed.");
+
+  $row = $stmt->fetch();
+
+  printf("<tr><td>%s</td><td> %8s </td><td> %8s</td><td> $%.02f </td></tr>", "Shipping Cost", "", "", $row['ShippingPrice']);
+  $sql = "SELECT sum(a.Quantity*a.CostPerItem)+b.ShippingPrice as Cost FROM OrderSlip b Inner Join OrderItem a ON b.OrderID=a.OrderID WHERE a.OrderID='".$id."' GROUP BY b.OrderID;";
+
+  $stmt = $db->query($sql);
+
+  if (!$stmt)
+   die("Database query failed.");
+
+  $row = $stmt->fetch();
+
+  printf("<tr><td>%s</td><td> %8s </td><td> %8s</td><td> $%.02f </td></tr>", "Total Cost", "", "", $row['Cost']);
    echo '</table>';
   }
   echo '</center>';
