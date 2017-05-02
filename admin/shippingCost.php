@@ -57,6 +57,30 @@ Shipping Costs
 <?php
   require('../db.php');
   echo '<br><br><br><br>';
+  if ($_SERVER["REQUEST_METHOD"] == "POST")
+  {
+   if (isset($_POST['create']))
+   {
+    $sql = sprintf("INSERT INTO ShippingCost (Weight, Cost) VALUES ('%s','%s')",
+             @mysql_escape_string($_POST["WEIGHT"]),
+             @mysql_escape_string($_POST["COST"]));
+    $stmt = $db->query($sql);
+
+    if (!$stmt)
+     die("Database query failed.");
+
+   }
+
+   elseif (isset($_POST['delete']))
+   {
+    $sql = sprintf("DELETE FROM ShippingCost WHERE Weight='%s'",
+                @mysql_escape_string($_POST["WEIGHT"]));
+    $stmt = $db->query($sql);
+
+    if (!$stmt)
+     die("Database query failed.");
+   }
+  }
   $sql = "select Weight, Cost from ShippingCost Order By Weight;";
   $stmt = $db->query($sql);
 
@@ -107,32 +131,6 @@ Always include cost when adding a weight bracket.
 </div> 
 </div>
 </form>
-<?php
-  if ($_SERVER["REQUEST_METHOD"] == "POST")
-  {
-   if (isset($_POST['create']))
-   {
-    $sql = sprintf("INSERT INTO ShippingCost (Weight, Cost) VALUES ('%s','%s')",
-             @mysql_escape_string($_POST["WEIGHT"]),
-             @mysql_escape_string($_POST["COST"]));
-    $stmt = $db->query($sql);
-
-    if (!$stmt)
-     die("Database query failed.");
-
-   }
-
-   elseif (isset($_POST['delete']))
-   {
-    $sql = sprintf("DELETE FROM ShippingCost WHERE Weight='%s'",
-                @mysql_escape_string($_POST["WEIGHT"]));
-    $stmt = $db->query($sql);
-
-    if (!$stmt)
-     die("Database query failed.");
-   }
-  }
-?>
 </div>
 </div> 
 </div> 

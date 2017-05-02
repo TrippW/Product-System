@@ -95,10 +95,12 @@
           <div class="container-fluid">
           <div class="row">
             <div class="col-md-4">
-              <h4><a href = "orderSlip.php?id=',$row['OrderID'],'">',printf("%s",$row['Date']),'</a> </h4>
+              <h4><a href = "orderSlip.php?id=',$row['OrderID'],'">'.$row['Date'].'</a> </h4>
             </div>
             <div class="col-md-4">
-              <h4><a href = "orderSlip.php?id=',$row['OrderID'],'">',printf("$%.02f",$row['Cost']),'</a> </h4>
+              <h4><a href = "orderSlip.php?id=',$row['OrderID'],'">';
+                                               printf("$%.02f",$row['Cost']);
+                                               echo '</a> </h4>
             </div>
             <div class="col-md-4">
               <h4><a href = "orderSlip.php?id=',$row['OrderID'],'">',$row['Status'],'</a> </h4>
