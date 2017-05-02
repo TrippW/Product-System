@@ -1,0 +1,49 @@
+.bhb-pricing-table {
+    
+}
+
+.bhb-pricing-table>.panel-heading>.panel-title {
+    font-size: 30px;
+    text-align: center;
+}
+
+.bhb-pricing-table>.panel-heading {
+    padding: 10px 15px;
+}
+
+.bhb-pricing-table>.panel-body {
+    text-align: center;
+}
+
+.bhb-pricing-table>.panel-body .price {
+    background-color: none;
+    font-size: 18px;
+    position: relative;
+    text-align: center;
+    padding-bottom: 25px;
+}
+
+.bhb-pricing-table>.panel-body .price>sup {
+    position: relative;
+    top: -32px;
+}
+
+.bhb-pricing-table>.panel-body .price>.currency-symbol {
+    position: relative;
+    top: -28px;
+}
+
+.bhb-pricing-table>.panel-body .price>em {
+    
+}
+
+.bhb-pricing-table>.panel-body .price strong {
+    display: inline-block;
+    font-size: 60px;
+    line-height: 60px;
+}
+
+.bhb-pricing-table>.panel-footer {
+    text-align: center;
+    background: none;
+}
