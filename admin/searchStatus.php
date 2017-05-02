@@ -76,8 +76,10 @@
  <?php
   require('../db.php');
 
-  $sql = "SELECT a.OrderID, a.Date, sum(b.CostPerItem*b.Quantity) AS Cost, a.Status FROM OrderSlip a INNER JOIN OrderItem b ON a.OrderID = b.OrderID ".
-         "GROUP BY a.OrderID;";
+  $sql = "SELECT a.OrderID, a.Date, sum(b.CostPerItem*b.Quantity) AS Cost, a.Status FROM OrderSlip a INNER JOIN OrderItem b ON a.OrderID = b.OrderID GROUP BY a.OrderID";
+  if(isset($_POST['search'])) 
+        $sql = $sql." HAVING a.Status='".$_POST['status']."'";
+  $sql = $sql.";";
   $stmt = $db->query($sql);
 
   if (!$stmt)
@@ -89,14 +91,16 @@
 
   while($row = $stmt->fetch())
   {
-            echo '<center>
+echo '<center>
           <div class="container-fluid">
           <div class="row">
             <div class="col-md-4">
-              <h4><a href = "orderSlip.php?id=',$row['OrderID'],'">',printf("%10s",$row['Date']),'</a> </h4>
+              <h4><a href = "orderSlip.php?id=',$row['OrderID'],'">'.$row['Date'].'</a> </h4>
             </div>
             <div class="col-md-4">
-              <h4><a href = "orderSlip.php?id=',$row['OrderID'],'">',printf("$%.02f",$row['Cost']),'</a> </h4>
+              <h4><a href = "orderSlip.php?id=',$row['OrderID'],'">';
+                                               printf("$%.02f",$row['Cost']);
+                                               echo '</a> </h4>
             </div>
             <div class="col-md-4">
               <h4><a href = "orderSlip.php?id=',$row['OrderID'],'">',$row['Status'],'</a> </h4>
